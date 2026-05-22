@@ -1,7 +1,13 @@
 # Ngân hàng kịch bản — v2
+Dự án Đại học Bách Khoa Hà Nội (FaMI team) — sinh ra kịch bản, video hoá, phân phối nội dung giáo dục về Xác suất Thống kê (XSTK) và các ứng dụng thực tế trong lĩnh vực CNTT, điện tử, cơ khí...
 
-Nâng cấp từ v1 (sinh hàng loạt, prompt khối, không kiểm chất lượng) sang quy trình:
+🎯 Mục tiêu
+
+- Xây dựng kho kịch bản video 18 chủ đề, mỗi chủ đề ~2 phút, độ sâu kiến thức đại cương.
+- Nâng cấp từ v1 (sinh hàng loạt, prompt khối, không kiểm chất lượng) sang quy trình:
 **prompt module hoá → sinh từng kịch bản có tư liệu → chấm điểm → tự cải thiện theo nhận xét.**
+- Đảm bảo chất lượng: không lạc đề, neo lý thuyết, không thiên ứng dụng.
+- Workflow linh hoạt: sinh từng chủ đề, bơm tư liệu riêng, tự cải thiện theo nhận xét AI.
 
 Giữ nguyên schema JSON (6 phần + 2 sub-key) nên `json_to_excel.py` chạy không cần sửa.
 
