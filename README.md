@@ -1,67 +1,134 @@
-# PROJECT1-MI2020-NGAN-HANG-KICH-BAN-V2
-Dự án Đại học Bách Khoa Hà Nội (FaMI team) — sinh ra kịch bản, video hoá, phân phối nội dung giáo dục về Xác suất Thống kê (XSTK) và các ứng dụng thực tế trong lĩnh vực CNTT, điện tử, cơ khí...
+# 📺 Ngân hàng kịch bản video — Ứng dụng XSTK vào công nghệ thông tin
 
-🎯 Mục tiêu
+Dự án Đại học Bách Khoa Hà Nội (FaMI team) — sinh ra kịch bản, video hoá, phân phối nội dung giáo dục
+về **Xác suất Thống kê (XSTK) và các ứng dụng thực tế** trong lĩnh vực CNTT, điện tử, cơ khí...
 
-- Xây dựng kho kịch bản video 18 chủ đề, mỗi chủ đề ~2 phút, độ sâu kiến thức đại cương.
-- Nâng cấp từ v1 (sinh hàng loạt, prompt khối, không kiểm chất lượng) sang quy trình:
-**prompt module hoá → sinh từng kịch bản có tư liệu → chấm điểm → tự cải thiện theo nhận xét.**
-- Đảm bảo chất lượng: không lạc đề, neo lý thuyết, không thiên ứng dụng.
-- Workflow linh hoạt: sinh từng chủ đề, bơm tư liệu riêng, tự cải thiện theo nhận xét AI.
+## 🎯 Mục tiêu
 
-Giữ nguyên schema JSON (6 phần + 2 sub-key) nên `json_to_excel.py` chạy không cần sửa.
+- **Xây dựng kho** kịch bản video 18 chủ đề, mỗi chủ đề ~2 phút, độ sâu kiến thức đại cương.
+- **Tự động hoá** sinh kịch bản từ chủ đề → JSON → Excel → video (dùng Manim 3D).
+- **Đảm bảo chất lượng**: không lạc đề, neo lý thuyết, không thiên ứng dụng.
+- **Workflow linh hoạt**: sinh từng chủ đề, bơm tư liệu riêng, tự cải thiện theo nhận xét AI.
 
-## Cấu trúc thư mục
-```
-scriptwriting/
-├── generate.py              # orchestrator v2 (thay cho aigenerate.py)
-├── prompts/                 # prompt tách module — sửa từng phần độc lập
-│   ├── 00_role.md           # vai trò: giảng viên XSTK, ưu tiên lý thuyết
-│   ├── 01_structure.md      # 6 phần + yêu cầu "hai hồi kết–mở"
-│   ├── 02_theory_anchor.md  # NEO LÝ THUYẾT — đòn bẩy chất lượng chính
-│   ├── 03_visual_manim.md   # quy tắc mô tả hình ảnh Manim
-│   ├── 04_length_budget.md  # ngân sách độ dài gắn với thời lượng phân cảnh
-│   ├── 05_constraints.md    # điều cấm (lạc đề, lan man, thiên ứng dụng)
-│   ├── 06_output_format.md  # hợp đồng JSON chặt
-│   ├── judge.md             # rubric chấm điểm
-│   └── revise.md            # hướng dẫn sửa theo nhận xét
-├── context/                 # tư liệu tham khảo từng chủ đề (tùy chọn)
-│   ├── _README.md
-│   └── <slug>.md            # vd: bayes_spam_filter.md
-├── topic.txt                # giữ nguyên
-├── sample_script.txt        # giữ nguyên
-└── raw_script/              # output: <slug>.json + reviews/<slug>_review.json
-```
+## 📦 Phiên bản
 
-## Cài đặt
+- **v1.0** — Sinh hàng loạt, prompt khối, không kiểm chất lượng.
+- **v2.0** ⭐ — Prompt module hoá, sinh từng kịch bản có context, chấm điểm + vòng lặp cải thiện tự động.
+
+## 🚀 Nhanh start
+
 ```bash
-pip install google-genai openpyxl pandas
-export GEMINI_API_KEY="..."     # bắt buộc
-export GEN_MODEL="gemini-3.1-pro-preview"   # tùy chọn
-export JUDGE_MODEL="..."         # tùy chọn — đặt model rẻ hơn để tiết kiệm token
+# 1. Clone repo
+git clone https://github.com/[your-org]/MI2020VideoProject.git
+cd MI2020VideoProject/scriptwriting
+
+# 2. Cài dependencies
+pip install -r requirements.txt
+
+# 3. Thiết lập API key
+export GEMINI_API_KEY="your-key-here"
+
+# 4. Sinh 1 chủ đề test (ví dụ: Bayes)
+python generate.py --only bayes_spam_filter --rounds 2
+
+# 5. Xem kết quả
+cat raw_script/bayes_spam_filter.json
+cat raw_script/reviews/bayes_spam_filter_review.json
+
+# 6. Gom toàn bộ vào Excel
+python json_to_excel.py
 ```
 
-## Dùng
+Chi tiết xem [SETUP.md](./docs/SETUP.md).
+
+## 📂 Cấu trúc thư mục
+
+```
+MI2020VideoProject/
+├── docs/                          # Tài liệu dự án (README này)
+│   ├── SETUP.md                   # Cài đặt & config
+│   ├── WORKFLOW.md                # Quy trình làm việc
+│   ├── ARCHITECTURE.md            # Thiết kế v2
+│   ├── QUALITY_RUBRIC.md          # Tiêu chí chấm điểm
+│   ├── context_TEMPLATE.md        # Mẫu thêm context
+│   └── TROUBLESHOOTING.md         # Gỡ lỗi
+├── scriptwriting/                 # Pipeline v2
+│   ├── generate.py                # Orchestrator chính
+│   ├── prompts/                   # Prompt module (7 sinh + 2 đánh giá)
+│   ├── context/                   # Tư liệu tham khảo từng chủ đề
+│   ├── raw_script/                # Output JSON + reviews/
+│   ├── topic.txt
+│   ├── sample_script.txt
+│   ├── json_to_excel.py
+│   └── README_v2.md               # Hướng dẫn scriptwriting riêng
+└── README.md                      # (file này)
+```
+
+## 📋 Quy trình hàng tuần
+
+1. **Thứ 2**: Chọn 2–3 chủ đề tuần này → tạo `context/<slug>.md` (Deep Research).
+2. **Thứ 3–4**: Chạy `generate.py --only <slug> --rounds 3`, kiểm điểm, lặp lại.
+3. **Thứ 5**: Video team dựng Manim, QA team chấp thuận.
+4. **Thứ 6**: Phân phối (TikTok, YouTube, Facebook, Website).
+
+Chi tiết: [WORKFLOW.md](./docs/WORKFLOW.md).
+
+## 🔑 Tính năng v2
+
+### ✅ Prompt module hoá
+- 7 module sinh + 2 module đánh giá → sửa chỉ 1 phần, không phá cái khác.
+- `02_theory_anchor.md` ép công thức + ngôn ngữ toán → giải quyết bài toán "kịch bản thiên ứng dụng".
+
+### ✅ Per-topic context injection
+- Mỗi chủ đề có `context/<slug>.md` riêng → bơm Gemini Deep Research → model dựa vào thay vì bịa.
+
+### ✅ Auto quality loop
+- Sinh → Kiểm schema → Chấm điểm (6 tiêu chí) → Chưa đạt? → Sửa theo nhận xét → Chấm lại.
+- Lưu `reviews/<slug>_review.json` ghi lịch sử điểm, giúp team thấy chủ đề nào còn yếu.
+
+### ✅ CLI linh hoạt
 ```bash
-python generate.py                       # sinh mọi chủ đề, bỏ qua file đã có
-python generate.py --force               # sinh lại tất cả
-python generate.py --only mtbf_estimation   # chỉ một chủ đề (workflow lặp từng cái)
-python generate.py --rounds 3            # tối đa 3 vòng cải thiện
-python generate.py --no-eval             # bản nháp nhanh, bỏ chấm điểm
-python generate.py --pass 4.2            # nâng ngưỡng đạt
+python generate.py --only <slug>      # Lặp 1 chủ đề
+python generate.py --force            # Sinh lại toàn bộ
+python generate.py --rounds 5         # Tối đa 5 vòng cải thiện
+python generate.py --no-eval          # Bản nháp nhanh (bỏ chấm)
 ```
-Sau đó vẫn chạy `python json_to_excel.py` như cũ để gom Excel.
 
-## Quy trình mỗi chủ đề
-1. **Sinh** — ghép `prompts/` + chủ đề + `context/<slug>` (nếu có) + mẫu → gọi model.
-2. **Kiểm schema** — sai cấu trúc thì tự nhắc lỗi và sinh lại (tối đa 3 lần).
-3. **Chấm điểm** — giám khảo cho điểm 6 tiêu chí (1–5) + lỗi cụ thể + gợi ý sửa.
-   Đạt khi: điểm TB ≥ ngưỡng VÀ không tiêu chí nào < 3.
-4. **Cải thiện** — chưa đạt thì sửa theo nhận xét rồi chấm lại, tới `--rounds` vòng.
-   Cuối cùng lưu **bản điểm cao nhất**, kèm `<slug>_review.json` ghi lịch sử điểm.
+## 📊 Tiêu chí chấm điểm (6 tiêu chí)
 
-## Tinh chỉnh chất lượng
-- Kịch bản còn "kể ứng dụng", thiếu toán → sửa `prompts/02_theory_anchor.md`.
-- Đổi tiêu chí/độ khắt khe khi chấm → sửa `prompts/judge.md`.
-- Bơm kiến thức chuẩn cho một chủ đề → thêm `context/<slug>.md` (dán Gemini Deep Research).
-- Tiết kiệm token: đặt `JUDGE_MODEL` rẻ hơn, hoặc `--rounds 1`, hoặc `--no-eval` cho bản nháp.
+1. **Hai hồi kết–mở** — câu hỏi ở Dẫn nhập được trả lời ở Tổng kết?
+2. **Neo lý thuyết** — Có công thức/định lý/khái niệm XSTK tường minh?
+3. **Dễ hiểu** — Giải thích rõ ràng, dễ theo dõi?
+4. **Mạch lạc** — Các phần nối mạch, dẫn dắt tự nhiên?
+5. **Chiều sâu đại cương** — Lấy kiến thức XSTK làm trọng tâm hay thiên ứng dụng?
+6. **Visual khả thi** — Mô tả Manim cụ thể, dựng được?
+
+Chi tiết: [QUALITY_RUBRIC.md](./docs/QUALITY_RUBRIC.md).
+
+## 📝 Để bắt đầu
+
+1. Đọc [SETUP.md](./docs/SETUP.md) để cài đặt.
+2. Đọc [WORKFLOW.md](./docs/WORKFLOW.md) để hiểu quy trình hàng tuần.
+3. Đọc [ARCHITECTURE.md](./docs/ARCHITECTURE.md) để hiểu tại sao v2 thiết kế như vậy.
+4. Chạy `python generate.py --only bayes_spam_filter` để test.
+5. Xem lỗi? → [TROUBLESHOOTING.md](./docs/TROUBLESHOOTING.md).
+
+## 🛠️ Công cụ & thư viện
+
+- **Sinh kịch bản**: Gemini 3.1 Pro (API)
+- **Xử lý JSON**: Python 3.9+
+- **Video**: Manim 0.18.0, Manim-voiceover, gTTS
+- **Excel**: openpyxl, pandas
+- **Khác**: google-genai, Jupyter Notebook, MikTeX (LaTeX)
+
+## 📈 Tiến độ
+
+- [x] v1.0 — sinh hàng loạt
+- [x] v2.0 — prompt module + context + auto-eval + improvement loop
+- [ ] v2.1 — tự động sinh visual (agent Manim)
+- [ ] v3.0 — full end-to-end (topic → video → publish)
+
+
+---
+
+**Last updated**: May 2026 | **Maintain by**: FaMI team, HUST
